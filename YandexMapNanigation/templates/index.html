@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Navigation
+{% endblock %}
+
+{% block content %}
+  <h3><a href="{% url 'sight:create' %}">Новая достопримечательность</a></h3>
+  {% for sight in page_obj %}
+    <ol>
+      <li>{{ sight.title }}</li>
+      <li>{{ sight.description }}</li>
+      <a href="{% url 'sight:detail' sight.id %}">Подробнее</a>
+    </ol>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ sight.title }}
+{% endblock %}
+
+{% block content %}
+  <h1>{{ sight.title }}</h1>
+  <p>{{ sight.description }}</p>
+  <ul>
+    <li><b>{{ sight.latitude }}</b></li>
+    <li><b>{{ sight.longitude }}</b></li>
+  </ul>
+  <h5>Author: {{ sight.author }}</h5>
+{% endblock %}
