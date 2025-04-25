@@ -1,0 +1,12 @@
+<a href="{% url 'sight:list' %}">Главная</a>
+<a href="{% url 'sight:create' %}">Добавить место</a>
+
+{% if user.is_authenticated %}
+  <span style="color: var(--primary-color); margin-right: 15px;">{{ user.username }}</span>
+  <form action="{% url 'logout' %}" method="post" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit">Выйти</button>
+  </form>
+{% else %}
+  <a href="{% url 'login' %}"><button>Войти</button></a>
+{% endif %}
