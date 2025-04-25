@@ -1,26 +1,68 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}
-  Navigation
+{% block title %}Достопримечательности{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/sights_list.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <div class="row g-4 justify-content-center">
-    {% for sight in page_obj %}
-      <div class="col-md-4">
-        <div class="card h-100">
-          <div class="card-header">
-            {{ sight.title }}
-          </div>
-          <div class="card-body">
-            <p>{{ sight.description }}</p>
-            <a class="btn btn-primary" href="{% url 'sight:detail' sight.id %}">Подробнее</a>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
+<div class="sights-container">
+    <div class="sights-header">
+        <h1 class="page-title">Достопримечательности</h1>
+        <a href="{% url 'sight:create' %}" class="btn btn-create">
+            <i class="material-icons">add_location</i>
+            Новая достопримечательность
+        </a>
+    </div>
 
+    <div class="sights-list">
+        {% for sight in page_obj %}
+        <div class="sight-card">
+            <div class="sight-content">
+                <h3 class="sight-title">{{ sight.title }}</h3>
+                <div class="sight-description">
+                    {{ sight.description|truncatewords:30 }}
+                </div>
+                <div class="sight-meta">
+                    <span class="sight-author">Автор: {{ sight.author.username }}</span>
+                    <a href="{% url 'sight:detail' sight.id %}" class="btn btn-details">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-sights">
+            <p>Пока нет достопримечательностей.</p>
+            <a href="{% url 'sight:create' %}" class="btn">Добавить первую</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">
+            <i class="material-icons">chevron_left</i>
+        </a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <span class="current-page">{{ num }}</span>
+        {% else %}
+        <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+            <i class="material-icons">chevron_right</i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
