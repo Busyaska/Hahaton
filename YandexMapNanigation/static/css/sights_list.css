@@ -1,0 +1,89 @@
+/* Основные отступы контейнера */
+.sights-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 3rem; /* Увеличил горизонтальные отступы */
+}
+
+/* Заголовок страницы */
+.sights-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem; /* Добавил горизонтальные отступы */
+}
+
+.sights-header h1 {
+    font-size: 2.5rem;
+    color: #00FF00;
+    margin: 0;
+    padding-left: 0.5rem; /* Дополнительный отступ слева */
+}
+
+/* Карточки достопримечательностей */
+.sights-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 0 1rem; /* Добавил отступы по бокам */
+}
+
+.sight-card {
+    background: #1E1E1E;
+    border-radius: 12px;
+    padding: 1.5rem 2rem; /* Увеличил горизонтальные отступы */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #00FF00;
+}
+
+/* Контент внутри карточки */
+.sight-content {
+    padding: 0 0.5rem; /* Добавил отступы для текста */
+}
+
+.sight-content h3 {
+    color: #00FF00;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    padding-left: 0; /* Убрал лишний отступ */
+}
+
+.sight-description {
+    color: #CCC;
+    margin: 1.5rem 0;
+    line-height: 1.6;
+    padding-right: 1rem; /* Добавил отступ справа */
+}
+
+.sight-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0 0.5rem; /* Отступы для мета-информации */
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .sights-container {
+        padding: 1.5rem; /* Уменьшаем отступы на мобильных */
+    }
+    
+    .sights-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0;
+    }
+    
+    .sights-list {
+        grid-template-columns: 1fr;
+        padding: 0;
+    }
+    
+    .sight-card {
+        padding: 1.25rem; /* Уменьшаем отступы карточек */
+    }
+}
