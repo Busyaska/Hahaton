@@ -1,37 +1,45 @@
 {% extends "base.html" %}
-{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<!-- Этот блок мы уберём, в нашей форме ошибки выводятся внутри формы. -->
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
+<div class="auth-container">
+  <div class="auth-card">
+    <h1><i class="material-icons">login</i> Вход в систему</h1>
+    
+    {% if form.errors %}
+    <div class="alert alert-error">
+      Неверное имя пользователя или пароль
+    </div>
     {% endif %}
-{% endif %}
-
-<div class="card col-4 m-3">
-    <div class="card-header">
-      Войти в систему
-    </div>
-    <div class="card-body">
-      <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <input type="hidden" name="next" value="{{ next }}">
-        <div class="d-flex justify-content-between align-items-center">
-          {% bootstrap_button button_type="submit" content="Войти" %}
-          <a class="btn btn-primary ms-2" href="{% url 'registration' %}">Зарегистрироваться</a>
-        </div>
-      </form>
-    </div>
+    
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <label for="id_username">Имя пользователя</label>
+        <input type="text" name="username" id="id_username" class="form-control" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="id_password">Пароль</label>
+        <input type="password" name="password" id="id_password" class="form-control" required>
+      </div>
+      
+      <button type="submit" class="btn">
+        <i class="material-icons">login</i>
+        Войти
+      </button>
+      
+      <div class="auth-links mt-2">
+        Нет аккаунта? <a href="{% url 'registration' %}">Зарегистрируйтесь</a>
+      </div>
+    </form>
   </div>
-  
+</div>
 {% endblock %}
