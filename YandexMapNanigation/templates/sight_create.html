@@ -1,13 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
 
 {% block title %}
+{% if '/delete/' in request.path %}
+  Удаление записи
+{% elif '/edit/' in request.path %}
+  Изменение записи
+{% else %}
   Новая достопримечательность
+{% endif %}
 {% endblock %}
 
 {% block content %}
-  <form method="post" action="{% url 'sight:create' %}">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Отправить">
-  </form>
+<div class="container d-flex justify-content-center">
+  <div class="card col-5">
+    <div class="card-header">
+      {% if '/delete/' in request.path %}
+        Удаление записи о {{ sight.title }}
+      {% elif '/edit/' in request.path %}
+        Изменение записи о {{ sight.title }}
+      {% else %}
+        Создание записи
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {% if '/delete/' in request.path %}
+          <ul>
+            <li>
+              Описание: {{ sight.description }}
+            </li>
+            <li>
+              Адрес: {{ sight.city}}, {{ sight.street }}, {{ sight.house_number }}
+            </li>
+            <li>
+              Author: {{ sight.author }}
+            </li>
+          </ul>
+          {% bootstrap_form form %}
+          {% bootstrap_button button_type="submit" content="Удалить" %}
+        {% else %}
+          {% bootstrap_form form %}
+          {% bootstrap_button button_type="submit" content="Отправить" %}
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

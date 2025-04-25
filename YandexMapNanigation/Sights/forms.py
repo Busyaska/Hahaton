@@ -6,4 +6,4 @@ class SightForm(forms.ModelForm):
     
     class Meta:
         model = Sight
-        fields = ('title', 'description', 'latitude', 'longitude')
+        fields = ('title', 'description', 'city', 'street', 'house_number', 'category')

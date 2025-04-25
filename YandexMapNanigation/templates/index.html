@@ -5,12 +5,22 @@
 {% endblock %}
 
 {% block content %}
-  <h3><a href="{% url 'sight:create' %}">Новая достопримечательность</a></h3>
-  {% for sight in page_obj %}
-    <ol>
-      <li>{{ sight.title }}</li>
-      <li>{{ sight.description }}</li>
-      <a href="{% url 'sight:detail' sight.id %}">Подробнее</a>
-    </ol>
-  {% endfor %}
+<div class="container mt-4">
+  <div class="row g-4 justify-content-center">
+    {% for sight in page_obj %}
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-header">
+            {{ sight.title }}
+          </div>
+          <div class="card-body">
+            <p>{{ sight.description }}</p>
+            <a class="btn btn-primary" href="{% url 'sight:detail' sight.id %}">Подробнее</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
 {% endblock %}

@@ -5,11 +5,20 @@
 {% endblock %}
 
 {% block content %}
-  <h1>{{ sight.title }}</h1>
-  <p>{{ sight.description }}</p>
-  <ul>
-    <li><b>{{ sight.latitude }}</b></li>
-    <li><b>{{ sight.longitude }}</b></li>
-  </ul>
-  <h5>Author: {{ sight.author }}</h5>
+<div class="container d-flex justify-content-center">
+  <div class="card col-5">
+    <div class="card-header">
+      <h1>{{ sight.title }}</h1>
+    </div>
+    <div class="card-body">
+      <p>Описание: {{ sight.description }}</p>
+      <h5>Адрес: {{ sight.city }}, {{ sight.street }}, {{ sight.house_number }}</h5>
+      <h5>Author: {{ sight.author }}</h5>
+      {% if request.user == sight.author %}
+        <a class="btn btn-primary" href="{% url 'sight:edit' sight.id %}">Изменить запись</a>
+        <a class="btn btn-primary" href="{% url 'sight:delete' sight.id %}">Удалить запись</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
