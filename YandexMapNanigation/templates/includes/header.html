@@ -1,27 +1,32 @@
-<nav class="navbar navbar-light" style="background-color: lightskyblue">
-  <div class="container">
-    <ul class="nav nav-pills align-items-center w-100">
-      <li class="nav-item">
-        <a class="nav-link {% if view_name == 'sight:list' %}active text-white{% endif %}" href="{% url 'sight:list' %}">
-          Главная
+<header class="navbar">
+  <div class="container nav-container">
+    <a href="{% url 'sight:list' %}" class="logo">
+      <h1>Хакатон ИТы ГЕРОЙ</h1>
+    </a>
+    
+    <nav class="nav-links">
+      {% if user.is_authenticated %}
+        <div class="user-greeting">
+          <i class="material-icons">account_circle</i>
+          <span>Привет, {{ user.username }}!</span>
+        </div>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">
+            <i class="material-icons">logout</i>
+            Выйти
+          </button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn">
+          <i class="material-icons">login</i>
+          Войти
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if view_name == 'sight:create' %}active text-white{% endif %}" href="{% url 'sight:create' %}">
-          Создать карточку места
+        <a href="{% url 'registration' %}" class="btn btn-secondary">
+          <i class="material-icons">person_add</i>
+          Регистрация
         </a>
-      </li>
-      <li class="nav-item ms-auto d-flex align-items-center">
-        {% if user.is_authenticated %}
-          <span class="nav-link disabled">Пользователь: {{ user.username }}</span>
-          <form action="{% url 'logout' %}" method="post" class="d-inline">
-            {% csrf_token %}
-            <button class="btn btn-outline-light btn-sm ms-2" type="submit">Выйти</button>
-          </form>
-        {% else %}
-          <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">Войти</a>
-        {% endif %}
-      </li>
-    </ul>
+      {% endif %}
+    </nav>
   </div>
-</nav>
+</header>
