@@ -1,24 +1,108 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}
-  {{ sight.title }}
+{% block title %}{{ sight.title }}{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/sight_detail.css' %}">
+  <script src="https://api-maps.yandex.ru/2.1/?apikey=bfec4ecd-6701-4004-a90b-6cf129e6df20&lang=ru_RU" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center">
-  <div class="card col-5">
-    <div class="card-header">
-      <h1>{{ sight.title }}</h1>
+  <div class="sight-detail-container">
+    <div class="sight-header">
+      <h1 class="sight-title">{{ sight.title }}</h1>
+      <p class="sight-description">{{ sight.description }}</p>
     </div>
-    <div class="card-body">
-      <p>Описание: {{ sight.description }}</p>
-      <h5>Адрес: {{ sight.city }}, {{ sight.street }}, {{ sight.house_number }}</h5>
-      <h5>Author: {{ sight.author }}</h5>
-      {% if request.user == sight.author %}
-        <a class="btn btn-primary" href="{% url 'sight:edit' sight.id %}">Изменить запись</a>
-        <a class="btn btn-primary" href="{% url 'sight:delete' sight.id %}">Удалить запись</a>
-      {% endif %}
+    
+    <div class="map-section">
+      <div class="map-container">
+        <div id="map"></div>
+      </div>
+      
+      <div class="route-controls">
+        <input type="text" 
+               id="user-address" 
+               class="route-input" 
+               placeholder="Введите ваш адрес или местоположение">
+        <button id="build-route" class="route-btn">
+          <span>Построить маршрут</span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const attractionCoords = [{{ sight.latitude }}, {{ sight.longitude }}];
+        let map;
+
+        ymaps.ready(function() {
+            // Инициализация карты
+            map = new ymaps.Map("map", {
+                center: attractionCoords,
+                zoom: 14,
+                controls: ['zoomControl']
+            });
+
+            // Маркер достопримечательности (без цифры)
+            const placemark = new ymaps.Placemark(attractionCoords, {
+                hintContent: '{{ sight.title|escapejs }}',
+                balloonContent: '{{ sight.description|escapejs }}'
+            }, {
+                preset: 'islands#greenDotIcon', // Зеленая точка
+                iconColor: '#00CC00' // Темно-зеленый цвет
+            });
+
+            map.geoObjects.add(placemark);
+
+            // Построение маршрута
+            document.getElementById('build-route').addEventListener('click', function() {
+                const userAddress = document.getElementById('user-address').value.trim();
+                if (!userAddress) return;
+
+                ymaps.geocode(userAddress).then(function(res) {
+                    const userCoords = res.geoObjects.get(0).geometry.getCoordinates();
+                    
+                    // Маркер пользователя (без цифры)
+                    const userMark = new ymaps.Placemark(userCoords, {
+                        hintContent: 'Ваше местоположение',
+                        balloonContent: userAddress
+                    }, {
+                        preset: 'islands#greenDotIcon', // Зеленая точка
+                        iconColor: '#00FF00' // Ярко-зеленый цвет
+                    });
+
+                    // Строим маршрут с отключенными цифрами
+                    var multiRoute = new ymaps.multiRouter.MultiRoute({
+                        referencePoints: [
+                            userCoords,
+                            attractionCoords
+                        ],
+                        params: {
+                            routingMode: 'auto'
+                        }
+                    }, {
+                        boundsAutoApply: true,
+                        // Отключаем отображение номеров точек
+                        wayPointStartIconColor: '#00FF00',
+                        wayPointFinishIconColor: '#00CC00',
+                        routeActiveStrokeWidth: 3,
+                        routeActiveStrokeColor: '#00FF00',
+                        // Скрываем цифры
+                        wayPointVisible: false,
+                        pinVisible: false
+                    });
+
+                    // Очищаем карту и добавляем маршрут
+                    map.geoObjects.removeAll();
+                    map.geoObjects
+                        .add(multiRoute)
+                        .add(userMark)
+                        .add(placemark);
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}
