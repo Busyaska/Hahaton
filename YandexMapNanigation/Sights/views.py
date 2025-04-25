@@ -18,7 +18,7 @@ class SightDetailView(DetailView):
     pk_url_kwarg = "id"
 
 
-class SightCreateView(CreateView):
+class SightCreateView(LoginRequiredMixin, CreateView):
     model = Sight
     form_class = SightForm
     template_name = "sight_create.html"
