@@ -40,6 +40,7 @@ class Sight(models.Model):
 class Rating(models.Model):
     sight = models.ForeignKey(Sight, on_delete=models.CASCADE, related_name='ratings', verbose_name='Достопримечательность')
     rating = models.PositiveSmallIntegerField('Оценка', validators=[MaxValueValidator(10)])
+    comment = models.TextField('Комментарий')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ratings', verbose_name='Автор')
 
     def __str__(self):

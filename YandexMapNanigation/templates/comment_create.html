@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}
+{% if '/delete/' in request.path %}
+  Удаление комментария
+{% elif '/edit/' in request.path %}
+  Изменение комментария
+{% else %}
+  Новый комментарий
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center">
+  <div class="card col-5">
+    <div class="card-header">
+      {% if '/delete/' in request.path %}
+        Удаление комментария
+      {% elif '/edit/' in request.path %}
+        Изменение комментария
+      {% else %}
+        Создание комментария
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {% if '/delete/' in request.path %}
+          <ul>
+            <li>
+              Описание: {{ rating.rating }}
+            </li>
+            <li>
+              Адрес: {{ rating.comment }}
+            </li>
+            <li>
+              Author: {{ rating.author }}
+            </li>
+          </ul>
+          {% bootstrap_form form %}
+          {% bootstrap_button button_type="submit" content="Удалить" %}
+        {% else %}
+          {% bootstrap_form form %}
+          {% bootstrap_button button_type="submit" content="Отправить" %}
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
